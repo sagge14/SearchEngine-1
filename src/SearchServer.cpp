@@ -3,6 +3,22 @@
 #include <set>
 #include <fstream>
 #include "../include/SearchServer.h"
+#include <jsoncpp/json/json.h>
+
+class MyParser {
+public:
+    MyParser() = default;
+    ~MyParser() = default;
+    inline static
+    Json::Value parse(const char* inputFile) {
+        Json::Value val;
+        std::ifstream ifs(inputFile);
+        Json::Reader reader;
+        reader.parse(ifs, val);
+        return val;
+    }
+};
+
 
 SearchServer::SearchServer(InvertedIndex & idx) : _index(idx)
 {
@@ -80,4 +96,9 @@ SearchServer::SearchServer(InvertedIndex & idx) : _index(idx)
     }
     f << j << std::endl;
     f.close();
+
+    Json::Value val = MyParser::parse("answers.json");
+    std::cout << val["answers"] << std::endl;
+
+
 }

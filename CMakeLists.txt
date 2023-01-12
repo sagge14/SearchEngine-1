@@ -3,9 +3,15 @@ project(SearchEngine)
 
 set(CMAKE_CXX_STANDARD 20)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(JSONCPP jsoncpp)
+
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE) # these are to use the prefered -pthread flag
+set(THREADS_PREFER_PTHREAD_FLAG TRUE) # over the -lpthread option
+find_package(Threads REQUIRED)
+
 set(MY_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 set(MY_SRC_DIR ${CMAKE_SOURCE_DIR}/src)
-
 
 include(FetchContent)
 
@@ -28,6 +34,9 @@ add_subdirectory(tests)
 add_subdirectory(src)
 
 target_link_libraries(SearchEngine
-        PRIVATE nlohmann_json::nlohmann_json)
+        PRIVATE nlohmann_json::nlohmann_json
+        PRIVATE Threads::Threads ${JSONCPP_LIBRARIES})
+
+
 
 FetchContent_MakeAvailable(json)
