@@ -2,6 +2,7 @@
 #include "nlohmann/json.hpp"
 #include "ConverterJSON.h"
 
+
 struct Entry {
     size_t doc_id, count;
 // Данный оператор необходим для проведения тестовых сценариев

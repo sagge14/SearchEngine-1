@@ -31,12 +31,10 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_executable(SearchEngine main.cpp src/ConverterJSON.cpp include/ConverterJSON.h src/InvertedIndex.cpp include/InvertedIndex.h src/SearchServer.cpp include/SearchServer.h)
 enable_testing()
 add_subdirectory(tests)
-add_subdirectory(src)
+#add_subdirectory(src)
 
 target_link_libraries(SearchEngine
         PRIVATE nlohmann_json::nlohmann_json
         PRIVATE Threads::Threads ${JSONCPP_LIBRARIES})
-
-
 
 FetchContent_MakeAvailable(json)

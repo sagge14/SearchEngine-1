@@ -1,7 +1,10 @@
 #include <fstream>
 #include <iostream>
+#include <thread>
+#include <mutex>
 #include "../include/InvertedIndex.h"
 
+void runThread(int n) {std::cout << "Thread number " << n << " is running ..." << std::endl; }
 
 InvertedIndex::InvertedIndex() {}
 
@@ -24,10 +27,22 @@ std::map<std::string, int> InvertedIndex::wordsSplit(std::string str) {
 }
 
 void InvertedIndex::Update_docs() {
+
+    std::mutex entry_access;
+    std::mutex vEntry_access;
+
+    std::mutex freq_dictionary_access;
+    std::mutex countDocs_access;
+
     Entry entry;
     std::vector<Entry> vEntry;
 
+    std::vector<std::thread> threads;
+
     for(int iDoc = 0; iDoc < docs.size(); ++iDoc) {
+
+        threads.push_back(std::thread(runThread,iDoc));
+
         // для подсчета повторов слов в документе
         std::map<std::string, int> wordsCount;
 
@@ -38,7 +53,9 @@ void InvertedIndex::Update_docs() {
         wordsCount = wordsSplit(docs[iDoc]);
 
         // кладем номер документа как первый элемент в структуру Entry
+        entry_access.lock();
         entry.doc_id = iDoc;
+        entry_access.unlock();
 
         // и надо еще иметь инфу сколько слов вообще в документе - для знаменателя в Rel relevance.
         // конечно вопрос - почему это не посчитать при разбивке на слова в split-e
@@ -50,12 +67,20 @@ void InvertedIndex::Update_docs() {
 
         // бежим по wordsCount
         for (auto it = wordsCount.begin(); it != wordsCount.end(); ++it) {
+
+            entry_access.lock();
             entry.count = it->second; // добавляем в структуру Entry второй элемент
+            entry_access.unlock();
+
             entryCount[it->first] = entry; // и сформированную сруктуру пишем в std::map<std::string, Entry> entryCount
 
             tmpCount += it->second; // складываем количество повторов и получаем количество слов в документе
         }
+
+        countDocs_access.lock();
         countDocs.push_back(tmpCount); // таким образом порядковый номер вектора это порядковый номер документа (idoc)
+        countDocs_access.unlock();
+
         // значение - общее число слов документа включая повторы
 
         // таким образом тут у нас по документу iDoc сформирована
@@ -67,16 +92,25 @@ void InvertedIndex::Update_docs() {
 
         for (auto it1 = entryCount.begin(); it1 != entryCount.end(); ++it1) {
             std::vector<Entry> vEntry;
+
+            vEntry_access.lock();
             vEntry.push_back(it1->second);
+            vEntry_access.unlock();
+
+            freq_dictionary_access.lock();
             freq_dictionary[it1->first].push_back(it1->second);
+            freq_dictionary_access.unlock();
         }
     }
     // тут по всем документам пробежали и freq_dictionary заполнили
+
+    std::cout << "synchronizing all threads...\n";
+    for (auto& th : threads) th.join();
 }
 
 void InvertedIndex::UpdateDocumentBase(
-        std::vector<std::string> input_docs,  // вектор документов где искать
-        std::vector<std::string> input_requests) // вектор слов какие искать
+        std::vector<std::string> input_docs,  // вектор документов (имен файлов) - где искать
+        std::vector<std::string> input_requests) // вектор слов - какие искать
 {
     // бежим по всем документам и каждый документ пишем в вектор
     for(int i = 0; i < input_docs.size(); ++i){
