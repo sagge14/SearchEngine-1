@@ -56,14 +56,14 @@ SearchServer::SearchServer(InvertedIndex & idx) : _index(idx)
             // mapDocCount[0] - 14, 1 - т е слово встречается в 15 документе 1 раз
             mapDocCount[idx.GetWordCount(pair.first)[i].doc_id] +=  idx.GetWordCount(pair.first)[i].count;
         }
-        int a=0;
+
     }
 
     // Итого в mapDocCount теперь  <номер документа, сколько всего слов из запросов входит>
 
     // создадим answers.json
     std::ofstream f;
-    f.open("../answers.json",std::ios_base::trunc |std::ios_base::out);
+    f.open("tmp.json",std::ios_base::trunc |std::ios_base::out);
     nlohmann::json j;
     int requestCounter=0;
     // внешний цикл - по запросам
@@ -82,7 +82,7 @@ SearchServer::SearchServer(InvertedIndex & idx) : _index(idx)
                 //std::cout << std::endl << "DOC_ID " << it1->first << " ";
                 //std::cout << "Abs relevance: " << it1->second << std::endl;
                 float rel=0;
-                if(idx.get_DocumentCountWords()[it1->first] >0) // от греха / на 0
+                if(idx.get_DocumentCountWords()[it1->first] > 0) // от греха / на 0
                     rel = it1->second / static_cast<float> (idx.get_DocumentCountWords()[it1->first]);
                 //std::cout << "Rel relevance: " <<  rel << std::endl;
 
@@ -95,12 +95,19 @@ SearchServer::SearchServer(InvertedIndex & idx) : _index(idx)
             j["answers"]["request" + iString]["result"] = "false";
             // тут больше ничего не делаем раз false
         }
+
     }
     f << j << std::endl;
     f.close();
 
-    Json::Value val = MyParser::parse("answers.json");
-    std::cout << val["answers"] << std::endl;
+    Json::Value val = MyParser::parse("tmp.json");
+//    std::cout << val["answers"] << std::endl;
 
+    Json::StyledWriter sw;
+    std::cout << sw.write(val) << std::endl << std::endl;
 
+    std::ofstream os;
+    os.open("answers.json");
+    os << sw.write(val);
+    os.close();
 }
