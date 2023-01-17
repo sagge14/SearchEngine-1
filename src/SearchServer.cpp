@@ -3,24 +3,7 @@
 #include <set>
 #include <fstream>
 #include <thread>
-
 #include "../include/SearchServer.h"
-#include <jsoncpp/json/json.h>
-
-class MyParser {
-public:
-    MyParser() = default;
-    ~MyParser() = default;
-    inline static
-    Json::Value parse(const char* inputFile) {
-        Json::Value val;
-        std::ifstream ifs(inputFile);
-        Json::Reader reader;
-        reader.parse(ifs, val);
-        return val;
-    }
-};
-
 
 SearchServer::SearchServer(InvertedIndex & idx) : _index(idx)
 {
@@ -56,14 +39,9 @@ SearchServer::SearchServer(InvertedIndex & idx) : _index(idx)
             // mapDocCount[0] - 14, 1 - т е слово встречается в 15 документе 1 раз
             mapDocCount[idx.GetWordCount(pair.first)[i].doc_id] +=  idx.GetWordCount(pair.first)[i].count;
         }
-
     }
 
     // Итого в mapDocCount теперь  <номер документа, сколько всего слов из запросов входит>
-
-    // создадим answers.json
-    std::ofstream f;
-    f.open("tmp.json",std::ios_base::trunc |std::ios_base::out);
     nlohmann::json j;
     int requestCounter=0;
     // внешний цикл - по запросам
@@ -85,29 +63,17 @@ SearchServer::SearchServer(InvertedIndex & idx) : _index(idx)
                 if(idx.get_DocumentCountWords()[it1->first] > 0) // от греха / на 0
                     rel = it1->second / static_cast<float> (idx.get_DocumentCountWords()[it1->first]);
                 //std::cout << "Rel relevance: " <<  rel << std::endl;
-
                 std::map<std::string , float> c_map { {"docid", it1->first}, {"rank", rel} };
                 j["answers"]["request" + iString]["relevance"] += c_map;
             }
-
-
         } else{
             j["answers"]["request" + iString]["result"] = "false";
             // тут больше ничего не делаем раз false
         }
-
     }
-    f << j << std::endl;
-    f.close();
-
-    Json::Value val = MyParser::parse("tmp.json");
-//    std::cout << val["answers"] << std::endl;
-
-    Json::StyledWriter sw;
-    std::cout << sw.write(val) << std::endl << std::endl;
 
     std::ofstream os;
-    os.open("answers.json");
-    os << sw.write(val);
+    os.open("../answers.json");
+    os << j.dump(4) << std::endl;
     os.close();
 }

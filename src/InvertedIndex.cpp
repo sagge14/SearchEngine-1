@@ -4,7 +4,9 @@
 #include <mutex>
 #include "../include/InvertedIndex.h"
 
-void runThread(int n) {std::cout << "Thread number " << n << " is running ..." << std::endl; }
+void runThread(int n) {
+    //std::cout << "Thread number " << n << " is running ..." << std::endl;
+    }
 
 InvertedIndex::InvertedIndex() {}
 
