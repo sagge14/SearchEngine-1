@@ -3,11 +3,16 @@ project(SearchEngine)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(MY_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
-set(MY_SRC_DIR ${CMAKE_SOURCE_DIR}/src)
+set(MY_SRC_DIR                      ${CMAKE_SOURCE_DIR}/src)
+set(MY_INCLUDE_DIR                  ${CMAKE_SOURCE_DIR}/include)
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR/bin})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_SOURCE_DIR})
 
-#message(WARNING "MY_INCLUDE_DIR = " ${MY_INCLUDE_DIR})
-#message(WARNING "MY_SRC_DIR = " ${MY_SRC_DIR})
+
+#message(WARNING "CMAKE_SOURCE_DIR   = " ${CMAKE_SOURCE_DIR})
+#message(WARNING "MY_SRC_DIR         = " ${MY_SRC_DIR})
+#message(WARNING "MY_INCLUDE_DIR     = " ${MY_INCLUDE_DIR})
+#message(WARNING "CMAKE_RUNTIME_OUTPUT_DIRECTORY = " ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 include(FetchContent)
 
@@ -24,7 +29,7 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 add_executable(SearchEngine
-        main.cpp
+        src/main.cpp
         src/ConverterJSON.cpp
         include/ConverterJSON.h
         src/InvertedIndex.cpp

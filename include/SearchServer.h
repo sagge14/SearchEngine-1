@@ -2,6 +2,7 @@
 #include <iostream>
 #include <map>
 #include <set>
+#include <vector>
 #include "nlohmann/json.hpp"
 #include "InvertedIndex.h"
 #include "ConverterJSON.h"
@@ -28,24 +29,26 @@ struct comp
     }
 };
 
-
 class SearchServer {
 public:
-/**
-* @param idx в конструктор класса передаётся ссылка на класс InvertedIndex,
-чтобы SearchServer мог узнать частоту слов встречаемых в запросе
-*/
     SearchServer(InvertedIndex&);
-/**
-* Метод обработки поисковых запросов
-* @param queries_input поисковые запросы взятые из файла requests.json
-* @return возвращает отсортированный список релевантных ответов для
-заданных запросов
-*/
-    std::vector<std::vector<RelativeIndex>> search(const std::vector<std::string>& queries_input);
+
+
+    std::vector<std::vector<RelativeIndex>> search(ConverterJSON);
+    std::vector<std::vector<RelativeIndex>> search1(const std::vector<std::string>& queries_input);
+
+protected:
+    std::map<std::string, int> wordsSplit(std::string);
+    void calcResult();
 
 
 private:
     InvertedIndex _index;
-    std::vector<std::string> _requests;
+
+    // Вектор запросов {"milk water banana milk water water", "sugar"};
+    // будет вот так: vector < {(banana,1)(milk 2)(water 3)}, {sugar, 1}>
+    // т е индекс вектора это новый запрос в котором слово->сколько раз
+    std::vector<std::map <std::string, int>> _requests;
+
+    std::vector<std::vector<RelativeIndex>> _result;
 };

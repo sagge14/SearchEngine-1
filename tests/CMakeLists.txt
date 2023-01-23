@@ -9,8 +9,8 @@ set(SrcFiles
         )
 
 set(TestsFiles
-
-        test1.cpp
+        TestsInvertedIndexFunctionality.cpp
+        TestsCaseSearchServer.cpp
         )
 
 add_executable(GtestTests ${TestsFiles} ${SrcFiles})

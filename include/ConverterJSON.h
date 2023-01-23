@@ -16,7 +16,6 @@ class ConverterJSON {
 public:
     ConverterJSON();
 
-// Метод получения содержимого файлов
 // @return Возвращает список с содержимым файлов перечисленных в config.json
     std::vector<std::string> GetTextDocuments();
 
@@ -24,15 +23,11 @@ public:
 // количества ответов на один запрос  @return
     int GetResponsesLimit();
 
-// Метод получения запросов из файла requests.json
 // @return возвращает список запросов из файла requests.json
     std::vector<std::string> GetRequests();
 
-    // Положить в файл answers.json результаты поисковых запросов
-    void putAnswers(std::vector<std::vector<std::pair<int, float>>> answers);
 protected:
     void readConfigFile(std::string);
-
 
 private:
     Conf conf;
