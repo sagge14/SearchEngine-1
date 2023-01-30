@@ -14,7 +14,7 @@ struct Conf{
 
 class ConverterJSON {
 public:
-    ConverterJSON();
+    ConverterJSON(std::string, std::string);
 
 // @return Возвращает список с содержимым файлов перечисленных в config.json
     std::vector<std::string> GetTextDocuments();

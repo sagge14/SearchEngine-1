@@ -78,7 +78,6 @@ void SearchServer::calcResult() {
             // _index.GetWordCount(pair.first) - это vеctor из документов с <map(docid,count)>
             // перебираем по всем документам в которых если слово pair.first из запроса
             for (int i = 0; i < _index.GetWordCount(pair.first).size(); ++i) {
-
                 // key -> номер документа, value -> накапливаем количество встреч
                 mapDocCount[_index.GetWordCount(pair.first)[i].doc_id] += _index.GetWordCount(pair.first)[i].count;
                 // 1 request, Next word ALL docs
@@ -115,10 +114,8 @@ void SearchServer::calcResult() {
 
                 RelativeIndex relativeIndex;
                 float flRel = (it1->second / static_cast<float> (absMax[nRequest]));
-
-                std::string strDocId = NumberToString(it1->first, 0);
-                std::string strRel = NumberToString(flRel, 9);
-
+                std::string strDocId    = NumberToString(it1->first, 0);
+                std::string strRel      = NumberToString(flRel, 9);
                 std::map<std::string, std::string> c_map{
                         {"docid", strDocId},
                         {"rank",  strRel}
@@ -139,21 +136,12 @@ void SearchServer::calcResult() {
             _result.push_back({}); // ну запрос есть, но без результатов
         }
     }
-
     std::ofstream os;
     os.open("answers.json");
     os << j.dump(3) << std::endl;
     std::cout << j.dump(3);
     os.close();
-
-
 }
 
-std::vector<std::vector<RelativeIndex>> SearchServer::search1(const std::vector<std::string> &queries_input) {
-    for (int i = 0; i < queries_input.size(); ++i) {
-        _requests.push_back(wordsSplit(queries_input[i]));
-    }
-    calcResult();
-    return _result;
-}
+
 

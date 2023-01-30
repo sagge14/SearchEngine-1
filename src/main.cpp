@@ -3,8 +3,7 @@
 #include "../include/SearchServer.h"
 
 int main() {
-
-    ConverterJSON converterJson;
+    ConverterJSON converterJson("config.json","requests.json");
     InvertedIndex invertedIndex;
     invertedIndex.UpdateDocumentBase(converterJson);
     SearchServer searchServer(invertedIndex);

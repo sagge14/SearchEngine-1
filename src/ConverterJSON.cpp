@@ -1,6 +1,5 @@
 #include <fstream>
 #include <iostream>
-#include <filesystem>
 #include "../include/ConverterJSON.h"
 
 class FileConfigDoesNotExist: public std::exception{
@@ -17,16 +16,16 @@ public:
     }
 };
 
-ConverterJSON::ConverterJSON() {
+ConverterJSON::ConverterJSON(std::string config, std::string request) {
     // считываем requests.json и config.json в структуру conf
     try {
-        readConfigFile("config.json");
+        readConfigFile(config);
     }
     catch (FileConfigDoesNotExist &x){
         std::cerr << "Wrong configuration: " << x.what() << std::endl;
     }
 
-    std::ifstream readFrom("requests.json");
+    std::ifstream readFrom(request);
     std::vector<std::string> req;
     nlohmann::json j;
     readFrom >> j;

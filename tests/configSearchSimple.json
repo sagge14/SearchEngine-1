@@ -1,0 +1,13 @@
+{
+  "config": {
+    "name": "SkillboxSearchEngine",
+    "version": "0.1",
+    "max_responses": 5
+  },
+  "files": [
+    "resources/TestSearchServerSimple1.txt",
+    "resources/TestSearchServerSimple2.txt",
+    "resources/TestSearchServerSimple3.txt",
+    "resources/TestSearchServerSimple4.txt"
+  ]
+}

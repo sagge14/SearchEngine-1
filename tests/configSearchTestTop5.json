@@ -1,0 +1,31 @@
+{
+  "config": {
+    "name": "SkillboxSearchEngine",
+    "version": "0.1",
+    "max_responses": 5
+  },
+  "files": [
+    "resources/file0001.txt",
+    "resources/file0002.txt",
+    "resources/file0003.txt",
+    "resources/file0004.txt",
+    "resources/file0005.txt",
+    "resources/file0006.txt",
+    "resources/file0007.txt",
+    "resources/file0008.txt",
+    "resources/file0009.txt",
+    "resources/file00010.txt",
+    "resources/file00011.txt",
+    "resources/file00012.txt",
+    "resources/file00013.txt",
+    "resources/file00014.txt",
+    "resources/file00015.txt",
+    "resources/file00016.txt",
+    "resources/file00017.txt",
+    "resources/file00018.txt",
+    "resources/file00019.txt",
+    "resources/file00020.txt",
+    "resources/file00021.txt",
+    "resources/file00022.txt"
+  ]
+}

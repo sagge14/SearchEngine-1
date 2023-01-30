@@ -1,18 +1,20 @@
 #include "gtest/gtest.h"
 #include "vector"
 #include "InvertedIndex.h"
+#include "ConverterJSON.h"
 
 void TestInvertedIndexFunctionality(
-        const std::vector<std::string>& docs,
-        const std::vector<std::string>& requests,
+        const std::string &docs,
+        const std::string &requests,
         const std::vector<std::vector<Entry>>& expected
-) {
+)
+{
     std::vector<std::vector<Entry>> result;
-
+    ConverterJSON converterJson(docs,requests);
     InvertedIndex idx;
-    idx.UpdateDocumentBase1(docs);
+    idx.UpdateDocumentBase(converterJson);
 
-    for(auto& request : requests) {
+    for(auto& request : converterJson.GetRequests()) {
         std::vector<Entry> word_count = idx.GetWordCount(request);
         result.push_back(word_count);
     }
@@ -20,13 +22,6 @@ void TestInvertedIndexFunctionality(
 }
 
 TEST(TestCaseInvertedIndex, TestBasic) {
-    const std::vector<std::string> docs = {
-            "london is the capital of great britain",
-            "big ben is the nickname for the Great bell of the striking clock"
-    };
-
-
-    const std::vector<std::string> requests = {"london", "the"};
     const std::vector<std::vector<Entry>> expected = {
             {
                     {0, 1}
@@ -35,17 +30,10 @@ TEST(TestCaseInvertedIndex, TestBasic) {
                     {0, 1}, {1, 3}
             }
     };
-    TestInvertedIndexFunctionality(docs, requests, expected);
+    TestInvertedIndexFunctionality("configTestBasic.json", "requestsTestBasic.json", expected);
 }
 
 TEST(TestCaseInvertedIndex, TestBasic2) {
-    const std::vector<std::string> docs = {
-            "milk milk milk milk water water water",
-            "milk water water",
-            "milk milk milk milk milk water water water water water",
-            "americano cappuccino"
-    };
-    const std::vector<std::string> requests = {"milk", "water", "cappuccino"};
     const std::vector<std::vector<Entry>> expected = {
             {
                     {0, 4}, {1, 1}, {2, 5}
@@ -55,18 +43,13 @@ TEST(TestCaseInvertedIndex, TestBasic2) {
                     {3, 1}
             }
     };
-    TestInvertedIndexFunctionality(docs, requests, expected);
+    TestInvertedIndexFunctionality("configTestBasic2.json", "requestsTestBasic2.json", expected);
 }
 
-TEST(TestCaseInvertedIndex, TestInvertedIndexMissingWord) {
-    const std::vector<std::string> docs = {
-            "a b c d e f g h i j k l",
-            "statement"
-    };
-    const std::vector<std::string> requests = {"m", "statement"};
+TEST(TestCaseInvertedIndex, MissingWord) {
     const std::vector<std::vector<Entry>> expected = {
             { },
             { {1, 1} }
     };
-    TestInvertedIndexFunctionality(docs, requests, expected);
+    TestInvertedIndexFunctionality("configMissingWord.json", "requestsMissingWord.json", expected);
 }

@@ -7,7 +7,6 @@
 #include "InvertedIndex.h"
 #include "ConverterJSON.h"
 
-
 struct RelativeIndex {
     size_t doc_id;
     float rank;
@@ -32,23 +31,17 @@ struct comp
 class SearchServer {
 public:
     SearchServer(InvertedIndex&);
-
-
     std::vector<std::vector<RelativeIndex>> search(ConverterJSON);
-    std::vector<std::vector<RelativeIndex>> search1(const std::vector<std::string>& queries_input);
 
 protected:
     std::map<std::string, int> wordsSplit(std::string);
     void calcResult();
 
-
 private:
     InvertedIndex _index;
-
     // Вектор запросов {"milk water banana milk water water", "sugar"};
     // будет вот так: vector < {(banana,1)(milk 2)(water 3)}, {sugar, 1}>
     // т е индекс вектора это новый запрос в котором слово->сколько раз
     std::vector<std::map <std::string, int>> _requests;
-
     std::vector<std::vector<RelativeIndex>> _result;
 };

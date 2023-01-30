@@ -105,14 +105,6 @@ void InvertedIndex::UpdateDocumentBase(ConverterJSON converterJson)
     Update_docs(); // там считаем freq_dictionary
 }
 
-void InvertedIndex::UpdateDocumentBase1(std::vector<std::string> vDocs) {
-    for (int i = 0; i < vDocs.size(); ++i) {
-        docs.push_back(vDocs[i]);
-    }
-    Update_docs(); // там считаем freq_dictionary
-}
-
-
 std::vector<Entry> InvertedIndex::GetWordCount(const std::string &word) {
     return freq_dictionary[word];
 }
