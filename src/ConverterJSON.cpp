@@ -1,6 +1,6 @@
 #include <fstream>
 #include <iostream>
-#include "../include/ConverterJSON.h"
+#include "ConverterJSON.h"
 
 class FileConfigDoesNotExist: public std::exception{
 public:

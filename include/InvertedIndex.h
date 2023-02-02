@@ -1,7 +1,7 @@
 #pragma once
 #include "nlohmann/json.hpp"
 #include "ConverterJSON.h"
-
+#include <thread>
 
 struct Entry {
     size_t doc_id, count;
@@ -15,12 +15,10 @@ class InvertedIndex {
 public:
     InvertedIndex();
     void UpdateDocumentBase(ConverterJSON);
-    void UpdateDocumentBase1(std::vector<std::string> input_docs);
-
     std::vector<Entry> GetWordCount(const std::string& word);
 
-
 protected:
+    void threadExec(int);
     std::map<std::string, int> wordsSplit(std::string);
     void Update_docs();
 

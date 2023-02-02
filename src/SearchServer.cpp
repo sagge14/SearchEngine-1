@@ -2,9 +2,9 @@
 #include <map>
 #include <set>
 #include <fstream>
-#include <thread>
-#include "../include/ConverterJSON.h"
-#include "../include/SearchServer.h"
+#include "ConverterJSON.h"
+#include "SearchServer.h"
+
 
 template <typename T>
 std::string NumberToString ( T Number, int n )
@@ -62,7 +62,6 @@ void SearchServer::calcResult() {
 
     for (int nRequest = 0; nRequest < _requests.size(); ++nRequest) {
         absMax.push_back(0); // by default
-
         // по заданию - надо отсортировать слова запроса в порядке увеличения частоты встречаемости: от самых редких до самых частых.
         // Внутри каждого запроса сортируем map-key по map-value
         std::set<std::pair<std::string, int>, comp> set(_requests[nRequest].begin(), _requests[nRequest].end());
